@@ -1,0 +1,13 @@
+{
+  "features": [
+    "selling_price"
+  ],
+  "scaler": "quantile",
+  "n_clusters": 2,
+  "cluster_names": [
+    "Economy",
+    "Premium"
+  ],
+  "silhouette_score": 0.9216,
+  "coefficient_variation": 69.36
+}

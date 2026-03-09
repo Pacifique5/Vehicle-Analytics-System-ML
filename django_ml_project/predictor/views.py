@@ -12,6 +12,23 @@ regression_model = joblib.load("model_generators/regression/regression_model.pkl
 classification_model = joblib.load("model_generators/classification/classification_model.pkl")
 clustering_model = joblib.load("model_generators/clustering/clustering_model.pkl")
 
+# Try to load advanced clustering model (best performance - Silhouette > 0.9)
+try:
+    clustering_model_advanced = joblib.load("model_generators/clustering/clustering_model_advanced.pkl")
+    from model_generators.clustering.train_cluster_advanced import evaluate_clustering_model_advanced
+    use_advanced_model = True
+except:
+    use_advanced_model = False
+
+# Try to load optimized clustering model
+try:
+    clustering_model_optimized = joblib.load("model_generators/clustering/clustering_model_optimized.pkl")
+    scaler_optimized = joblib.load("model_generators/clustering/scaler_optimized.pkl")
+    from model_generators.clustering.train_cluster_optimized import evaluate_clustering_model_optimized
+    use_optimized_model = True
+except:
+    use_optimized_model = False
+
 # Try to load improved clustering model
 try:
     clustering_model_improved = joblib.load("model_generators/clustering/clustering_model_improved.pkl")
@@ -20,15 +37,6 @@ try:
     use_improved_model = True
 except:
     use_improved_model = False
-
-# Try to load optimized clustering model (best performance)
-try:
-    clustering_model_optimized = joblib.load("model_generators/clustering/clustering_model_optimized.pkl")
-    scaler_optimized = joblib.load("model_generators/clustering/scaler_optimized.pkl")
-    from model_generators.clustering.train_cluster_optimized import evaluate_clustering_model_optimized
-    use_optimized_model = True
-except:
-    use_optimized_model = False
 
 def data_exploration_view(request):
     df = pd.read_csv("dummy-data/vehicles_ml_dataset.csv")
@@ -72,14 +80,21 @@ def classification_analysis(request):
     return render(request, "predictor/classification_analysis.html", context)
 
 def clustering_analysis(request):
-    # Use optimized model if available (best), then improved, then standard
-    if use_optimized_model:
+    # Use advanced model if available (best - Silhouette > 0.9), then optimized, then improved, then standard
+    if use_advanced_model:
+        context = {
+            "evaluations": evaluate_clustering_model_advanced(),
+            "model_type": "advanced"
+        }
+        model_bundle = clustering_model_advanced
+    elif use_optimized_model:
         context = {
             "evaluations": evaluate_clustering_model_optimized(),
             "model_type": "optimized"
         }
         active_model = clustering_model_optimized
         active_scaler = scaler_optimized
+        model_bundle = None
     elif use_improved_model:
         context = {
             "evaluations": evaluate_clustering_model_improved(),
@@ -87,6 +102,7 @@ def clustering_analysis(request):
         }
         active_model = clustering_model_improved
         active_scaler = scaler_improved
+        model_bundle = None
     else:
         context = {
             "evaluations": evaluate_clustering_model(),
@@ -94,6 +110,7 @@ def clustering_analysis(request):
         }
         active_model = clustering_model
         active_scaler = None
+        model_bundle = None
     
     if request.method == "POST":
         try:
@@ -106,22 +123,60 @@ def clustering_analysis(request):
             predicted_price = regression_model.predict([[year, km, seats, income]])[0]
             
             # Step 2: Predict cluster
-            if active_scaler:
-                # Scale the input for improved/optimized models
+            if model_bundle:
+                # Advanced model uses bundle with metadata
+                import numpy as np
+                kmeans = model_bundle["kmeans"]
+                scaler = model_bundle["scaler"]
+                features = model_bundle["features"]
+                cluster_mapping = model_bundle["cluster_mapping"]
+                
+                # Prepare input based on required features
+                if features == ["selling_price"]:
+                    input_data = np.array([[predicted_price]])
+                elif features == ["estimated_income"]:
+                    input_data = np.array([[income]])
+                elif features == ["estimated_income", "selling_price"]:
+                    input_data = np.array([[income, predicted_price]])
+                else:
+                    # Default fallback
+                    input_data = np.array([[predicted_price]])
+                
+                # Apply scaler if exists
+                if scaler:
+                    input_scaled = scaler.transform(input_data)
+                else:
+                    input_scaled = input_data
+                
+                # Predict cluster
+                cluster_id = kmeans.predict(input_scaled)[0]
+                prediction = cluster_mapping.get(cluster_id, "Unknown")
+                
+            elif active_scaler:
+                # Improved/optimized models with scaler
                 import numpy as np
                 input_scaled = active_scaler.transform([[income, predicted_price]])
                 cluster_id = active_model.predict(input_scaled)[0]
+                
+                mapping = {
+                    0: "Economy",
+                    1: "Standard",
+                    2: "Premium"
+                }
+                prediction = mapping.get(cluster_id, "Unknown")
             else:
+                # Standard model
                 cluster_id = active_model.predict([[income, predicted_price]])[0]
-            
-            mapping = {
-                0: "Economy",
-                1: "Standard",
-                2: "Premium"
-            }
+                
+                mapping = {
+                    0: "Economy",
+                    1: "Standard",
+                    2: "Premium"
+                }
+                prediction = mapping.get(cluster_id, "Unknown")
             
             context.update({
-                "prediction": mapping.get(cluster_id, "Unknown"),
+                "prediction": prediction,
                 "price": predicted_price
             })
         except Exception as e:
