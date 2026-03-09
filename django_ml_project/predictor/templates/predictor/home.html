@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle ML Dashboard - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --success-color: #10b981;
+            --info-color: #3b82f6;
+            --warning-color: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .hero-section {
+            padding: 60px 0;
+            color: white;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+        }
+        
+        .analysis-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            height: 100%;
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .analysis-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #6366f1 100%);
+            color: white;
+        }
+        
+        .analysis-card.data-exploration .analysis-icon {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .analysis-card.regression .analysis-icon {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        .analysis-card.classification .analysis-icon {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .analysis-card.clustering .analysis-icon {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        
+        .analysis-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .analysis-description {
+            color: #6b7280;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .analysis-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        
+        .feature-list li i {
+            color: var(--success-color);
+            margin-right: 8px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .animate-card:nth-child(1) { animation-delay: 0.1s; }
+        .animate-card:nth-child(2) { animation-delay: 0.2s; }
+        .animate-card:nth-child(3) { animation-delay: 0.3s; }
+        .animate-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .stats-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section text-center">
+            <h1 class="hero-title">
+                <i class="bi bi-graph-up-arrow me-3"></i>
+                Vehicle ML Dashboard
+            </h1>
+            <p class="hero-subtitle">
+                Advanced Machine Learning Analytics for Vehicle Data
+            </p>
+            
+            <!-- Stats -->
+            <div class="stats-section">
+                <div class="row">
+                    <div class="col-md-3 col-6 mb-3 mb-md-0">
+                        <div class="stat-item">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Analysis Types</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3 mb-md-0">
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">ML Models</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-item">
+                            <span class="stat-number">1000</span>
+                            <span class="stat-label">Data Records</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-item">
+                            <span class="stat-number">0.92</span>
+                            <span class="stat-label">Silhouette Score</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analysis Cards -->
+        <div class="row g-4 pb-5">
+            <!-- Data Exploration -->
+            <div class="col-lg-6 animate-card">
+                <a href="{% url 'data_exploration' %}" class="analysis-card data-exploration">
+                    <div class="analysis-icon">
+                        <i class="bi bi-map"></i>
+                    </div>
+                    <h3 class="analysis-title">Data Exploration</h3>
+                    <p class="analysis-description">
+                        Explore vehicle data with interactive visualizations and Rwanda district mapping
+                    </p>
+                    <span class="analysis-badge">
+                        <i class="bi bi-award me-1"></i>Exercise Part A (20 marks)
+                    </span>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Rwanda District Map Visualization</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Statistical Analysis</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Data Distribution Charts</li>
+                    </ul>
+                </a>
+            </div>
+            
+            <!-- Clustering Analysis -->
+            <div class="col-lg-6 animate-card">
+                <a href="{% url 'clustering_analysis' %}" class="analysis-card clustering">
+                    <div class="analysis-icon">
+                        <i class="bi bi-diagram-3"></i>
+                    </div>
+                    <h3 class="analysis-title">Clustering Analysis</h3>
+                    <p class="analysis-description">
+                        Segment customers into groups using advanced clustering algorithms
+                    </p>
+                    <span class="analysis-badge">
+                        <i class="bi bi-award me-1"></i>Exercise Part B & C (10 marks)
+                    </span>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Silhouette Score: 0.9216</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Coefficient of Variation Analysis</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Customer Segmentation</li>
+                    </ul>
+                </a>
+            </div>
+            
+            <!-- Regression Analysis -->
+            <div class="col-lg-6 animate-card">
+                <a href="{% url 'regression_analysis' %}" class="analysis-card regression">
+                    <div class="analysis-icon">
+                        <i class="bi bi-graph-down"></i>
+                    </div>
+                    <h3 class="analysis-title">Regression Analysis</h3>
+                    <p class="analysis-description">
+                        Predict vehicle prices using machine learning regression models
+                    </p>
+                    <span class="analysis-badge">
+                        <i class="bi bi-calculator me-1"></i>Price Prediction
+                    </span>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Accurate Price Estimation</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Model Performance Metrics</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Feature Importance Analysis</li>
+                    </ul>
+                </a>
+            </div>
+            
+            <!-- Classification Analysis -->
+            <div class="col-lg-6 animate-card">
+                <a href="{% url 'classification_analysis' %}" class="analysis-card classification">
+                    <div class="analysis-icon">
+                        <i class="bi bi-tags"></i>
+                    </div>
+                    <h3 class="analysis-title">Classification Analysis</h3>
+                    <p class="analysis-description">
+                        Classify income levels and customer categories with ML classification
+                    </p>
+                    <span class="analysis-badge">
+                        <i class="bi bi-tag me-1"></i>Category Prediction
+                    </span>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Income Level Classification</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Accuracy Metrics</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Confusion Matrix Analysis</li>
+                    </ul>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

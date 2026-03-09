@@ -3,69 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle ML Dashboard</title>
+    <title>Regression Analysis - Vehicle ML Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --success-color: #10b981;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border-radius: 16px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            border-radius: 16px 16px 0 0 !important;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-outline-light {
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-light:hover {
+            transform: translateY(-2px);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu"
-                 class="col-md-3 col-lg-2 d-md-block bg-white border-end sticky-top vh-100 overflow-y-auto p-3">
-                <div class="mb-4 ps-2">
-                    <h5 class="text-primary fw-bold mb-0">Vehicle ML</h5>
-                    <small class="text-muted">Regression Analysis</small>
+<body>
+    <div class="header-section">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="fw-bold mb-2">
+                        <i class="bi bi-graph-down me-2"></i>
+                        Regression Analysis
+                    </h1>
+                    <p class="mb-0 opacity-90">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Predict vehicle market prices using machine learning
+                    </p>
                 </div>
-                <div id="data_exploration-nav" class="nav nav-pills flex-column">
-                    <a class="nav-link mb-1 active" href="#regression-analysis">Regression Analysis</a>
-                    <a class="nav-link mb-1" href="#evaluation_metrics">Evaluation Metrics</a>
-                    <a class="nav-link mb-1" href="{% url 'data_exploration' %}">Exploratory Data Analysis</a>
-                    <a class="nav-link mb-1" href="{% url 'classification_analysis' %}">Classification Analysis</a>
-                    <a class="nav-link mb-1" href="{% url 'clustering_analysis' %}">Clustering Analysis</a>
-                </div>
-            </nav>
+                <a href="{% url 'home' %}" class="btn btn-outline-light">
+                    <i class="bi bi-house me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" data-bs-spy="scroll"
-                  data-bs-target="#data_exploration-nav" data-bs-smooth-scroll="true" tabindex="0">
+    <div class="container pb-5">
+        <main>
 
-                <header class="mb-4 border-bottom pb-3">
-                    <h1 class="fw-bold text-dark">Vehicle Insights Dashboard</h1>
-                    <p class="text-secondary mb-0">Real-time Machine Learning Inference</p>
-                </header>
-
-                <section id="regression-analysis" class="mb-5" style="padding-top: 20px;">
+                <section id="regression-analysis" class="mb-5 animate-in">
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <div class="card shadow-sm border-0 h-100">
-                                <div class="card-header bg-primary text-white py-3">
-                                    <h6 class="mb-0 fw-bold">Input Vehicle Specifications</h6>
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header text-white py-3">
+                                    <h5 class="mb-0 fw-bold">
+                                        <i class="bi bi-input-cursor me-2"></i>Vehicle Specifications
+                                    </h5>
+                                    <small class="opacity-75">Enter vehicle details to predict price</small>
                                 </div>
                                 <div class="card-body p-4">
                                     <form method="POST" action="">
                                         {% csrf_token %}
-                                        <div class="row g-3">
+                                        <div class="row g-4">
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Model Year</label>
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-calendar3 me-1"></i>Model Year
+                                                </label>
                                                 <input type="number" name="year" class="form-control"
-                                                       placeholder="e.g. 2022" required>
+                                                       placeholder="e.g., 2022" min="1990" max="2024" required>
+                                                <small class="text-muted">Vehicle manufacturing year</small>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Kilometers Driven</label>
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-speedometer2 me-1"></i>Kilometers Driven
+                                                </label>
                                                 <input type="number" step="any" name="km" class="form-control"
-                                                       placeholder="e.g. 15000" required>
+                                                       placeholder="e.g., 15000" min="0" required>
+                                                <small class="text-muted">Total distance traveled</small>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Number of Seats</label>
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-people me-1"></i>Number of Seats
+                                                </label>
                                                 <input type="number" name="seats" class="form-control"
-                                                       placeholder="e.g. 5" required>
+                                                       placeholder="e.g., 5" min="2" max="8" required>
+                                                <small class="text-muted">Seating capacity</small>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Owner Income</label>
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-cash-coin me-1"></i>Owner Income
+                                                </label>
                                                 <input type="number" step="any" name="income" class="form-control"
-                                                       placeholder="e.g. 50000" required>
+                                                       placeholder="e.g., 50000" min="0" required>
+                                                <small class="text-muted">Annual income estimate</small>
                                             </div>
                                             <div class="col-12 mt-4">
-                                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Predict
-                                                    Market Price</button>
+                                                <button type="submit" class="btn btn-primary w-100 py-3">
+                                                    <i class="bi bi-play-circle me-2"></i>
+                                                    Predict Market Price
+                                                </button>
                                             </div>
                                         </div>
                                     </form>
@@ -74,21 +180,31 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <div class="card shadow-sm border-0 h-100 bg-white">
-                                <div class="card-header bg-dark text-white py-3">
-                                    <h6 class="mb-0 fw-bold">Prediction Result</h6>
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header {% if price %}bg-success{% else %}bg-secondary{% endif %} text-white py-3">
+                                    <h5 class="mb-0 fw-bold">
+                                        <i class="bi bi-lightbulb me-2"></i>Prediction Result
+                                    </h5>
                                 </div>
-                                <div
-                                    class="card-body d-flex flex-column align-items-center justify-content-center text-center p-4">
+                                <div class="card-body d-flex flex-column align-items-center justify-content-center text-center p-4">
                                     {% if price %}
-                                    <div class="mb-2 text-muted text-uppercase small fw-bold">Estimated Value</div>
-                                    <h2 class="display-4 fw-bold text-success mb-2">${{ price|floatformat:2 }}</h2>
+                                    <div class="mb-3">
+                                        <small class="text-muted text-uppercase fw-bold d-block mb-2">
+                                            <i class="bi bi-currency-dollar"></i> Estimated Market Value
+                                        </small>
+                                        <div class="metric-value">${{ price|floatformat:2 }}</div>
+                                    </div>
+                                    <div class="alert alert-success w-100 mb-0">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <small>Prediction based on regression model</small>
+                                    </div>
                                     {% else %}
                                     <div class="py-5">
-                                        <div class="text-muted mb-3 opacity-25">
-                                            Waiting...
-                                        </div>
-                                        <p class="text-secondary">Fill out the form to generate a price prediction.</p>
+                                        <i class="bi bi-hourglass-split text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                                        <h5 class="text-muted mb-2">Ready to Predict</h5>
+                                        <p class="text-secondary">
+                                            Fill in the vehicle specifications to generate a price prediction
+                                        </p>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -97,15 +213,22 @@
                     </div>
                 </section>
 
-                <section id="evaluation_metrics" class="mb-5" style="padding-top: 20px;">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <span class="fw-bold">Evaluation Metrics</span>
+                <section id="evaluation_metrics" class="mb-5 animate-in">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-white py-3">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-bar-chart-line me-2"></i>Model Performance Metrics
+                            </h5>
+                            <small class="opacity-75">Regression model evaluation</small>
                         </div>
-                        <div class="card-body overflow-x-auto">
-                            Then, {{ evaluations.r2|safe }}% measures how well these selected features explain the
-                            variation in selling prices.
-                            {{ evaluations.comparison|safe }}
+                        <div class="card-body p-4">
+                            <div class="alert alert-info border-0 mb-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                The R² score of <strong>{{ evaluations.r2|safe }}%</strong> measures how well the selected features explain the variation in selling prices.
+                            </div>
+                            <div class="table-responsive">
+                                {{ evaluations.comparison|safe }}
+                            </div>
                         </div>
                     </div>
                 </section>

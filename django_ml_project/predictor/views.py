@@ -38,6 +38,10 @@ try:
 except:
     use_improved_model = False
 
+def home(request):
+    """Landing page with all analysis options"""
+    return render(request, "predictor/home.html")
+
 def data_exploration_view(request):
     df = pd.read_csv("dummy-data/vehicles_ml_dataset.csv")
     

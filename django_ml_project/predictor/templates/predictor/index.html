@@ -3,79 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle ML Dashboard</title>
+    <title>Data Exploration - Vehicle ML Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --success-color: #10b981;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            min-height: 100vh;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #059669 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border-radius: 16px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            border-radius: 16px 16px 0 0 !important;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #059669 100%);
+        }
+        
+        .btn-outline-light {
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-light:hover {
+            transform: translateY(-2px);
+        }
+        
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-white border-end sticky-top vh-100 overflow-y-auto p-3">
-                <div class="mb-4 ps-2">
-                    <h5 class="text-primary fw-bold mb-0">Vehicle ML</h5>
-                    <small class="text-muted">EDA</small>
+<body>
+    <div class="header-section">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="fw-bold mb-2">
+                        <i class="bi bi-map me-2"></i>
+                        Data Exploration
+                    </h1>
+                    <p class="mb-0 opacity-90">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Explore vehicle data with interactive visualizations
+                    </p>
                 </div>
-                <div id="data_exploration-nav" class="nav nav-pills flex-column">
-                    <a class="nav-link mb-1 active" href="#dataset_exploration">Data Exploration</a>
-                    <a class="nav-link mb-1" href="#data_exploration">Data Description</a>
-                    <a class="nav-link mb-1" href="#rwanda_map">Rwanda Map Visualization</a>
-                    <a class="nav-link mb-1" href="#district_summary">District Summary</a>
-                    <a class="nav-link mb-1" href="{% url 'regression_analysis' %}">Regression Analysis</a>
-                    <a class="nav-link mb-1" href="{% url 'classification_analysis' %}">Classification Analysis</a>
-                    <a class="nav-link mb-1" href="{% url 'clustering_analysis' %}">Clustering Analysis</a>
-                </div>
-            </nav>
+                <a href="{% url 'home' %}" class="btn btn-outline-light">
+                    <i class="bi bi-house me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" 
-                  data-bs-spy="scroll" 
-                  data-bs-target="#data_exploration-nav" 
-                  data-bs-smooth-scroll="true" 
-                  tabindex="0">
-                
-                <header class="mb-4 border-bottom pb-3">
-                    <h1 class="fw-bold text-dark">Vehicle Insights Dashboard</h1>
-                    <p class="text-secondary mb-0">Exploratory Data Analysis</p>
-                </header>
+    <div class="container pb-5">
+        <main>
 
-                <section id="dataset_exploration" class="mb-5" style="padding-top: 20px;">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <span class="fw-bold">Data Exploration</span>
+                <section id="dataset_exploration" class="mb-5 animate-in">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-white py-3">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-table me-2"></i>Dataset Overview
+                            </h5>
+                            <small class="opacity-75">Vehicle data exploration and statistics</small>
                         </div>
-                        <div class="card-body overflow-x-auto">
+                        <div class="card-body p-4">
                             {{ dataset_exploration|safe }}
                         </div>
                     </div>
                 </section>
 
-                <section id="data_exploration" class="mb-5" style="padding-top: 20px;">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <span class="fw-bold">Statistical Analysis</span>
+                <section id="data_exploration" class="mb-5 animate-in">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-white py-3">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-graph-up me-2"></i>Statistical Analysis
+                            </h5>
+                            <small class="opacity-75">Descriptive statistics and data insights</small>
                         </div>
-                        <div class="card-body overflow-x-auto">
+                        <div class="card-body p-4">
                             {{ data_exploration|safe }}
                         </div>
                     </div>
                 </section>
 
-                <section id="rwanda_map" class="mb-5" style="padding-top: 20px;">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <span class="fw-bold">Rwanda Map - Vehicle Clients Distribution by District</span>
-                            <span class="badge bg-primary ms-2">Exercise Part A (20 marks)</span>
+                <section id="rwanda_map" class="mb-5 animate-in">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div>
+                                    <h5 class="mb-0 fw-bold">
+                                        <i class="bi bi-geo-alt me-2"></i>Rwanda District Map
+                                    </h5>
+                                    <small class="opacity-75">Vehicle clients distribution by district</small>
+                                </div>
+                                <span class="badge bg-warning text-dark mt-2 mt-md-0">
+                                    <i class="bi bi-award me-1"></i>Exercise Part A (20 marks)
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             {{ rwanda_map|safe }}
                         </div>
                     </div>
                 </section>
 
-                <section id="district_summary" class="mb-5" style="padding-top: 20px;">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <span class="fw-bold">District Summary Statistics</span>
+                <section id="district_summary" class="mb-5 animate-in">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-white py-3">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-list-ul me-2"></i>District Summary Statistics
+                            </h5>
+                            <small class="opacity-75">Detailed breakdown by district</small>
                         </div>
-                        <div class="card-body overflow-x-auto">
+                        <div class="card-body p-4">
                             {{ district_summary|safe }}
                         </div>
                     </div>
