@@ -2,6 +2,7 @@ import pandas as pd
 import joblib
 from django.shortcuts import render
 from predictor.data_exploration import dataset_exploration, data_exploration
+from predictor.rwanda_map_visualization import create_rwanda_map, get_district_summary_table
 from model_generators.clustering.train_cluster import evaluate_clustering_model
 from model_generators.classification.train_classifier import evaluate_classification_model
 from model_generators.regression.train_regression import evaluate_regression_model
@@ -11,11 +12,36 @@ regression_model = joblib.load("model_generators/regression/regression_model.pkl
 classification_model = joblib.load("model_generators/classification/classification_model.pkl")
 clustering_model = joblib.load("model_generators/clustering/clustering_model.pkl")
 
+# Try to load improved clustering model
+try:
+    clustering_model_improved = joblib.load("model_generators/clustering/clustering_model_improved.pkl")
+    scaler_improved = joblib.load("model_generators/clustering/scaler_improved.pkl")
+    from model_generators.clustering.train_cluster_improved import evaluate_clustering_model_improved
+    use_improved_model = True
+except:
+    use_improved_model = False
+
+# Try to load optimized clustering model (best performance)
+try:
+    clustering_model_optimized = joblib.load("model_generators/clustering/clustering_model_optimized.pkl")
+    scaler_optimized = joblib.load("model_generators/clustering/scaler_optimized.pkl")
+    from model_generators.clustering.train_cluster_optimized import evaluate_clustering_model_optimized
+    use_optimized_model = True
+except:
+    use_optimized_model = False
+
 def data_exploration_view(request):
     df = pd.read_csv("dummy-data/vehicles_ml_dataset.csv")
+    
+    # Create Rwanda map visualization
+    rwanda_map_html = create_rwanda_map(df)
+    district_summary = get_district_summary_table(df)
+    
     context = {
         "data_exploration": data_exploration(df),
         "dataset_exploration": dataset_exploration(df),
+        "rwanda_map": rwanda_map_html,
+        "district_summary": district_summary,
     }
     return render(request, "predictor/index.html", context)
 
@@ -46,9 +72,29 @@ def classification_analysis(request):
     return render(request, "predictor/classification_analysis.html", context)
 
 def clustering_analysis(request):
-    context = {
-        "evaluations": evaluate_clustering_model()
-    }
+    # Use optimized model if available (best), then improved, then standard
+    if use_optimized_model:
+        context = {
+            "evaluations": evaluate_clustering_model_optimized(),
+            "model_type": "optimized"
+        }
+        active_model = clustering_model_optimized
+        active_scaler = scaler_optimized
+    elif use_improved_model:
+        context = {
+            "evaluations": evaluate_clustering_model_improved(),
+            "model_type": "improved"
+        }
+        active_model = clustering_model_improved
+        active_scaler = scaler_improved
+    else:
+        context = {
+            "evaluations": evaluate_clustering_model(),
+            "model_type": "standard"
+        }
+        active_model = clustering_model
+        active_scaler = None
+    
     if request.method == "POST":
         try:
             year = int(request.POST["year"])
@@ -60,7 +106,13 @@ def clustering_analysis(request):
             predicted_price = regression_model.predict([[year, km, seats, income]])[0]
             
             # Step 2: Predict cluster
-            cluster_id = clustering_model.predict([[income, predicted_price]])[0]
+            if active_scaler:
+                # Scale the input for improved/optimized models
+                import numpy as np
+                input_scaled = active_scaler.transform([[income, predicted_price]])
+                cluster_id = active_model.predict(input_scaled)[0]
+            else:
+                cluster_id = active_model.predict([[income, predicted_price]])[0]
             
             mapping = {
                 0: "Economy",

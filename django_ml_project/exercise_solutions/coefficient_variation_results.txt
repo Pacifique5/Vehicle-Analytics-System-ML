@@ -1,0 +1,29 @@
+================================================================================
+EXERCISE PART B: Coefficient of Variation Results
+================================================================================
+
+Silhouette Score: 0.6789
+Overall Coefficient of Variation: 71.72%
+
+Per-Cluster Results:
+--------------------------------------------------------------------------------
+
+Economy Cluster:
+  Samples:      643
+  Income CV:    36.81%
+  Price CV:     28.25%
+  Average CV:   32.53%
+
+Standard Cluster:
+  Samples:      250
+  Income CV:    31.79%
+  Price CV:     18.56%
+  Average CV:   25.18%
+
+Premium Cluster:
+  Samples:      107
+  Income CV:    29.83%
+  Price CV:     19.03%
+  Average CV:   24.43%
+
+================================================================================

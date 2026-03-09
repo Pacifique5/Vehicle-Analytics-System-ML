@@ -17,6 +17,8 @@
                 <div id="data_exploration-nav" class="nav nav-pills flex-column">
                     <a class="nav-link mb-1 active" href="#dataset_exploration">Data Exploration</a>
                     <a class="nav-link mb-1" href="#data_exploration">Data Description</a>
+                    <a class="nav-link mb-1" href="#rwanda_map">Rwanda Map Visualization</a>
+                    <a class="nav-link mb-1" href="#district_summary">District Summary</a>
                     <a class="nav-link mb-1" href="{% url 'regression_analysis' %}">Regression Analysis</a>
                     <a class="nav-link mb-1" href="{% url 'classification_analysis' %}">Classification Analysis</a>
                     <a class="nav-link mb-1" href="{% url 'clustering_analysis' %}">Clustering Analysis</a>
@@ -52,6 +54,29 @@
                         </div>
                         <div class="card-body overflow-x-auto">
                             {{ data_exploration|safe }}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="rwanda_map" class="mb-5" style="padding-top: 20px;">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <span class="fw-bold">Rwanda Map - Vehicle Clients Distribution by District</span>
+                            <span class="badge bg-primary ms-2">Exercise Part A (20 marks)</span>
+                        </div>
+                        <div class="card-body">
+                            {{ rwanda_map|safe }}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="district_summary" class="mb-5" style="padding-top: 20px;">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <span class="fw-bold">District Summary Statistics</span>
+                        </div>
+                        <div class="card-body overflow-x-auto">
+                            {{ district_summary|safe }}
                         </div>
                     </div>
                 </section>

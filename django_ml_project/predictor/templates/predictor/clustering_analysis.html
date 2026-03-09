@@ -114,13 +114,52 @@
                 <section id="evaluation-metrics" class="mb-5 pt-3">
                     <div class="card shadow-sm border-0">
                         <div
-                            class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                            class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap">
                             <span class="fw-bold text-dark">Evaluation Metrics</span>
-                            <span class="badge bg-light text-primary border border-primary">
-                                Silhouette Score: {{evaluations.silhouette|safe }}
-                            </span>
+                            <div>
+                                <span class="badge bg-success border me-2">
+                                    Silhouette Score: {{evaluations.silhouette|safe }}
+                                </span>
+                                <span class="badge bg-info border">
+                                    Coefficient of Variation: {{evaluations.coefficient_variation|safe }}%
+                                </span>
+                                <span class="badge bg-primary ms-2">Exercise Part B (5 marks)</span>
+                            </div>
                         </div>
-                        <div class="card-body"> 
+                        <div class="card-body">
+                            {% if evaluations.cluster_cv %}
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">Coefficient of Variation by Cluster:</h6>
+                                <div class="row">
+                                    {% for cluster_name, cv_data in evaluations.cluster_cv.items %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <h6 class="card-title text-primary">{{ cluster_name }}</h6>
+                                                <p class="mb-1"><small>Income CV: <strong>{{ cv_data.income_cv }}%</strong></small></p>
+                                                <p class="mb-1"><small>Price CV: <strong>{{ cv_data.price_cv }}%</strong></small></p>
+                                                <p class="mb-0"><small>Average CV: <strong>{{ cv_data.avg_cv }}%</strong></small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if model_type == "optimized" %}
+                            <div class="alert alert-success mb-3">
+                                <strong>🚀 Optimized Model Active!</strong> Using advanced clustering with outlier removal and {{ evaluations.optimal_clusters }} clusters.
+                                <br><small>Outliers removed: {{ evaluations.outliers_removed }} | Samples used: {{ evaluations.samples_used }}</small>
+                                <span class="badge bg-warning text-dark ms-2">Exercise Part C (5 marks)</span>
+                            </div>
+                            {% elif model_type == "improved" %}
+                            <div class="alert alert-success mb-3">
+                                <strong>Improved Model Active!</strong> Using optimized clustering with {{ evaluations.optimal_clusters }} clusters.
+                                <span class="badge bg-warning text-dark ms-2">Exercise Part C (5 marks)</span>
+                            </div>
+                            {% endif %}
+                            
                             <div class="table-responsive">
                                 {{ evaluations.summary|safe }}
                             </div>
